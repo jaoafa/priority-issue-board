@@ -58,9 +58,7 @@ new Vue({
             this.repo = params.get('repo')
         }
 
-        if (this.repo !== null) {
-            this.getIssues()
-        }
+        this.getIssues()
     },
     methods: {
         getRepos() {
@@ -81,6 +79,9 @@ new Vue({
                 })
         },
         getIssues() {
+            if (this.repo === null) {
+                return;
+            }
             history.replaceState('', '', '?repo=' + this.repo);
 
             this.loading = true
