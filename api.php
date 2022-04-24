@@ -245,7 +245,10 @@ function getRepos()
         return ($a["open_issues"] < $b["open_issues"]) ? 1 : -1;
     });
     return array_map(function ($repo) {
-        return $repo["name"];
+        return [
+            "name" => $repo["name"],
+            "open_issues" => $repo["open_issues"]
+        ];
     }, $repos);
 }
 

@@ -30,9 +30,15 @@
                         </v-col>
 
                         <v-col cols="4">
-                            <v-select v-model="repo" :items="repos" label="Select" return-object single-line>
+                            <v-select v-model="repo" :items="repos" label="Select" :items="items" item-name="name"
+                                item-value="name" single-line>
+                                <template v-slot:selection="{ item }">
+                                    <span>{{ item.name }}</span>
+                                </template>
+                                <template v-slot:item="{ item }">
+                                    <span>{{ item.name }} ({{ item.open_issues }} issues)</span>
+                                </template>
                             </v-select>
-
                         </v-col>
                     </v-row>
 
