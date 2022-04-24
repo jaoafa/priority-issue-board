@@ -1,0 +1,4 @@
+config.inc.php
+issues.json
+repos.json
+*.db

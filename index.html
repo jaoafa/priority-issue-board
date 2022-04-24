@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+        <title>Issue 優先度アンケートボード - jao Minecraft Server</title>
+    </head>
+    <body>
+        <main id="app">
+            <v-app>
+                <div class="header">
+                    <v-toolbar style="cursor: pointer">
+                        <img src="logo.png" class="mr-3" height="45" width="45" />
+                        <v-toolbar-title> Issue 優先度アンケートボード </v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-btn fab dark small color="primary" @click="dialog = true">
+                            <v-icon dark>
+                                mdi-chat-question-outline
+                            </v-icon>
+                        </v-btn>
+                    </v-toolbar>
+                </div>
+                <v-main>
+                    <v-row>
+                        <v-col cols="8">
+                        </v-col>
+
+                        <v-col cols="4">
+                            <v-select v-model="repo" :items="repos" label="Select" return-object single-line>
+                            </v-select>
+
+                        </v-col>
+                    </v-row>
+
+                    <v-data-table :headers="headers" :items="items" :items-per-page="30" :loading="loading"
+                        sort-by="rank" :sort-desc="true" class="elevation-1">
+                        <template #[`item.author`]="{ item }">
+                            <v-avatar size="36px" class="mr-1">
+                                <img :src="`https://avatars.githubusercontent.com/u/${item.author.id}?s=64&v=4`" />
+                            </v-avatar>
+                            {{ item.author.name }}
+                        </template>
+                        <template #[`item.upvote`]="{ item }">
+                            <v-btn fab small icon :loading="item.upvote.loading" @click="upvote(item)">
+                                <v-icon v-if="item.upvote.voted" color="#ffb41d">mdi-thumb-up</v-icon>
+                                <v-icon v-else color="#536471">mdi-thumb-up-outline</v-icon>
+                            </v-btn>
+                            {{ item.upvote.count }}
+                        </template>
+                        <template #[`item.downvote`]="{ item }">
+                            <v-btn fab small icon :loading="item.downvote.loading" @click="downvote(item)">
+                                <v-icon v-if="item.downvote.voted" color="#ffb41d">mdi-thumb-down</v-icon>
+                                <v-icon v-else color="#536471">mdi-thumb-down-outline</v-icon>
+                            </v-btn>
+                            {{ item.downvote.count }}
+                        </template>
+                        <template #[`item.see`]="{ item }">
+                            <v-btn fab x-small color="#ffb41d" dark
+                                :href="`https://github.com/jaoafa/${repo}/issues/${item.number}`" target="_blank">
+                                <v-icon dark>mdi-chevron-right</v-icon>
+                            </v-btn>
+                        </template>
+                    </v-data-table>
+                </v-main>
+                <v-dialog v-model="dialog">
+                    <v-card>
+                        <v-card-title class="text-h5 grey lighten-2">
+                            Issue 優先度アンケートボードとは
+                        </v-card-title>
+
+                        <v-card-text class="text-body-1 mt-3 font-weight-medium">
+                            「Issue 優先度アンケートボード」は MyMaid4 や Javajaotan2 などといった、GitHub jaoafa オーガニゼーションで管理・開発されているプロジェクトの
+                            Issue (問題)に対し、ユーザー目線でランク付けを行うボードです。<br>
+                            <br>
+                            開発者は、「どの不具合や意見がユーザーにとって重要視されるものか」を客観的に判断することが非常に難しいです。<br>
+                            そこで、利用していただくみなさんに Issue に対する優先度評価をしていただくことで、分かりやすく客観的な判断がしやすくなると考えています。<br>
+                            あなた自身の純粋な観点で、「欲しい機能」や「直してほしい不具合」には <v-icon color="#536471">mdi-thumb-up-outline</v-icon>
+                            を、「別にいらないかなと思う機能」などへは <v-icon color="#536471">mdi-thumb-down-outline</v-icon>
+                            をクリックして評価してください。<br>
+                            <br>
+                            GitHub アカウントなどへのログインを行うことなく投票ができるようになっています。<br>
+                            その代わり、アクセス元 IP アドレスとセッション情報でユーザーを判別し、投票済みかどうかの確認を行っています。<br>
+                            <br>
+                            サーバ負荷を低減するため、リポジトリや Issue の情報は5分間のキャッシュを行っています。作成された Issue はすぐには表示されない場合がありますのでご注意ください。<br>
+                            <br>
+                            見つかった不具合や意見などは <a href="https://github.com/jaoafa/priority-issue-board/new/choose">GitHub
+                                リポジトリの Issue</a> などでご連絡ください。
+                        </v-card-text>
+
+                        <v-divider></v-divider>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" text @click="dialog = false">
+                                閉じる
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-app>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
