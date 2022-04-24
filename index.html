@@ -51,7 +51,7 @@
                     </v-row>
 
                     <v-data-table :headers="headers" :items="items" :items-per-page="30" :loading="loading"
-                        :search="search" :custom-filter="filter" sort-by="rank" :sort-desc="true" class="elevation-1">
+                        :search="search" sort-by="rank" :sort-desc="true" class="elevation-1">
                         <template #[`item.title`]="{ item }">
                             {{ item.title }}<br>
                             <v-chip v-if="displayLabel" v-for="label in item.labels" class="ma-1 label-chip"
