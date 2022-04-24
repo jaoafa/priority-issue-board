@@ -53,6 +53,12 @@ function getUserId()
         $stmt->execute();
         return $pdo->lastInsertId();
     }
+    if ($user && $user["ip"] !== $ip) {
+        $stmt = $pdo->prepare("UPDATE users SET ip = :ip WHERE id = :id");
+        $stmt->bindValue(":ip", $ip);
+        $stmt->bindValue(":id", $user["id"]);
+        $stmt->execute();
+    }
     return $user["id"];
 }
 
