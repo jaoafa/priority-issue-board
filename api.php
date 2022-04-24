@@ -263,6 +263,12 @@ function getIssues()
     foreach ($issues as $issue) {
         $issueUpVotes = isset($votes["issueUpVotes"][$issue["number"]]) ? $votes["issueUpVotes"][$issue["number"]] : [];
         $issueDownVotes = isset($votes["issueDownVotes"][$issue["number"]]) ? $votes["issueDownVotes"][$issue["number"]] : [];
+        $labels = array_map(function ($label) {
+            return [
+                "name" => $label["name"],
+                "color" => $label["color"]
+            ];
+        }, $issue["labels"]);
         $results[] = [
             "number" => $issue["number"],
             "title" => $issue["title"],
@@ -270,6 +276,7 @@ function getIssues()
                 "id" => $issue["user"]["id"],
                 "name" => $issue["user"]["login"],
             ],
+            "labels" => $labels,
             "upvote" => [
                 "voted" => in_array($userId, $issueUpVotes),
                 "count" => count($issueUpVotes)

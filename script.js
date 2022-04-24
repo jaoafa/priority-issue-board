@@ -47,7 +47,9 @@ new Vue({
             },
         ],
         items: [],
+        search: "",
         dialog: false,
+        displayLabel: false
     },
     mounted() {
         this.getRepos()
@@ -213,6 +215,13 @@ new Vue({
                     console.error(error)
                     alert("通信中にエラーが発生しました。\nしばらく待ってからもう一度お試しください。\n\n" + error.message + (error.response ? "\n" + error.response.data.data : ""))
                 })
+        },
+        getTextColor(hexcolor) {
+            const r = parseInt(hexcolor.substr(0, 2), 16);
+            const g = parseInt(hexcolor.substr(2, 2), 16);
+            const b = parseInt(hexcolor.substr(4, 2), 16);
+
+            return ((((r * 299) + (g * 587) + (b * 114)) / 1000) < 128) ? "white" : "black";
         }
     },
     watch: {
