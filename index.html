@@ -34,7 +34,7 @@
                         </v-col>
 
                         <v-col cols="2">
-                            <v-switch v-model="displayLabel" label="Label"></v-switch>
+                            <v-switch v-model="displaylabel" label="Label"></v-switch>
                         </v-col>
 
                         <v-col cols="2" class="pr-5">
@@ -54,7 +54,7 @@
                         :search="search" sort-by="rank" :sort-desc="true" class="elevation-1">
                         <template #[`item.title`]="{ item }">
                             {{ item.title }}<br>
-                            <v-chip v-if="displayLabel" v-for="label in item.labels" class="ma-1 label-chip"
+                            <v-chip v-if="displaylabel" v-for="label in item.labels" class="ma-1 label-chip"
                                 :color="`#${label.color}`" :style="`color: ${getTextColor(label.color)}`"
                                 :href="`https://github.com/jaoafa/${repo}/issues?q=is%3Aissue+is%3Aopen+label%3A${label.name}`"
                                 target="_blank" small>

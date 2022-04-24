@@ -49,7 +49,7 @@ new Vue({
         items: [],
         search: "",
         dialog: false,
-        displayLabel: false
+        displaylabel: false
     },
     mounted() {
         this.getRepos()
