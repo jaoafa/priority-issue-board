@@ -35,19 +35,21 @@ function getUserId()
         throw new ServerException("データベースの接続に失敗しました。");
     }
 
+    $ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
+
     if (isset($_SESSION["user_id"])) {
         $stmt = $pdo->prepare("SELECT id FROM users WHERE id = :id");
         $stmt->bindValue(":id", $_SESSION["user_id"]);
         $stmt->execute();
     } else {
         $stmt = $pdo->prepare("SELECT id FROM users WHERE ip = :ip");
-        $stmt->bindValue(":ip", $_SERVER["REMOTE_ADDR"]);
+        $stmt->bindValue(":ip", $ip);
         $stmt->execute();
     }
     $user = $stmt->fetch();
     if (!$user) {
         $stmt = $pdo->prepare("INSERT INTO users (ip) VALUES (:ip)");
-        $stmt->bindValue(":ip", $_SERVER["REMOTE_ADDR"]);
+        $stmt->bindValue(":ip", $ip);
         $stmt->execute();
         return $pdo->lastInsertId();
     }
