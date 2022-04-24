@@ -36,7 +36,7 @@
                                     <span>{{ item.name }}</span>
                                 </template>
                                 <template v-slot:item="{ item }">
-                                    <span>{{ item.name }} ({{ item.open_issues }} issue/pulls)</span>
+                                    <span>{{ item.name }} ({{ item.open_issues }} issue/pr)</span>
                                 </template>
                             </v-select>
                         </v-col>
@@ -92,6 +92,7 @@
                             その代わり、アクセス元 IP アドレスとセッション情報でユーザーを判別し、投票済みかどうかの確認を行っています。<br>
                             <br>
                             サーバ負荷を低減するため、リポジトリや Issue の情報は5分間のキャッシュを行っています。作成された Issue はすぐには表示されない場合がありますのでご注意ください。<br>
+                            リポジトリ一覧に表示される個数にはプルリクエストも含まれているため、Issue の数と合致しない場合があります。参考までにご利用ください。<br>
                             <br>
                             見つかった不具合や意見などは <a href="https://github.com/jaoafa/priority-issue-board/issues/new/choose">GitHub
                                 リポジトリの Issue</a> などでご連絡ください。
