@@ -25,19 +25,16 @@
                     </v-toolbar>
                 </div>
                 <v-main>
-                    <v-row>
-                        <v-col cols="4" class="pl-5">
+                    <v-row no-gutters>
+                        <v-col class="px-5">
                             <v-text-field v-model="search" label="Search"></v-text-field>
-                        </v-col>
-
-                        <v-col cols="4">
                         </v-col>
 
                         <v-col cols="2">
                             <v-switch v-model="displaylabel" label="Label"></v-switch>
                         </v-col>
 
-                        <v-col cols="2" class="pr-5">
+                        <v-col cols="2" class="px-5">
                             <v-select v-model="repo" :items="repos" label="Select" :items="items" item-name="name"
                                 item-value="name" single-line>
                                 <template v-slot:selection="{ item }">
@@ -54,8 +51,9 @@
                         :search="search" sort-by="rank" :sort-desc="true" class="elevation-1">
                         <template #[`item.title`]="{ item }">
                             {{ item.title }}<br>
-                            <v-chip v-if="displaylabel" v-for="label in item.labels" class="ma-1 label-chip"
-                                :color="`#${label.color}`" :style="`color: ${getTextColor(label.color)}`"
+                            <v-chip v-if="displaylabel" v-for="label in item.labels" v-key="label.name"
+                                class="ma-1 label-chip" :color="`#${label.color}`"
+                                :style="`color: ${getTextColor(label.color)}`"
                                 :href="`https://github.com/jaoafa/${repo}/issues?q=is%3Aissue+is%3Aopen+label%3A${label.name}`"
                                 target="_blank" small>
                                 {{ label.name }}
@@ -111,6 +109,7 @@
                             サーバ負荷を低減するため、リポジトリや Issue の情報は5分間のキャッシュを行っています。作成された Issue はすぐには表示されない場合がありますのでご注意ください。<br>
                             リポジトリ一覧に表示される個数にはプルリクエストも含まれているため、Issue の数と合致しない場合があります。参考までにご利用ください。<br>
                             <br>
+                            デバイスはデスクトップ・ノートパソコン・タブレット(940px～)をお勧めしています。<br>
                             見つかった不具合や意見などは <a
                                 href="https://github.com/jaoafa/priority-issue-board/issues/new/choose">GitHub
                                 リポジトリの Issue</a> などでご連絡ください。
@@ -126,6 +125,31 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
+                <v-footer padless>
+                    <v-card flat tile width="100%">
+                        <v-card-text>
+                            <v-row>
+                                <v-col cols="6">
+                                    Cache timestamp:
+                                    <ul>
+                                        <li v-for="timestamp of timestamps" v-key="timestamp.name">
+                                            {{ timestamp.name }}: {{ timestamp.timestamp }}
+                                        </li>
+                                    </ul>
+                                </v-col>
+                                <v-col cols="6">
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+
+                        <v-divider></v-divider>
+
+                        <v-card-text class="text-center">
+                            {{ new Date().getFullYear() }} — <strong>jao Minecraft Server</strong>
+                        </v-card-text>
+                    </v-card>
+                </v-footer>
+
             </v-app>
         </main>
 

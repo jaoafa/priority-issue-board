@@ -6,6 +6,7 @@ new Vue({
         loading: false,
         repo: "MyMaid4",
         repos: [],
+        timestamps: [],
         headers: [
             {
                 text: '#',
@@ -61,6 +62,8 @@ new Vue({
         }
 
         this.getIssues()
+
+        this.getTimestamps()
     },
     methods: {
         getRepos() {
@@ -95,6 +98,24 @@ new Vue({
             })
                 .then(response => {
                     this.items = response.data.data
+                    this.loading = false
+                })
+                .catch(error => {
+                    console.error(error)
+                    console.log(error.response)
+                    alert("通信中にエラーが発生しました。\nしばらく待ってからもう一度お試しください。\n\n" + error.message + (error.response ? "\n" + error.response.data.data : ""))
+                })
+        },
+        getTimestamps() {
+            this.loading = true
+            axios.get(`api.php`, {
+                params: {
+                    repo: this.repo,
+                    action: "get-timestamps"
+                }
+            })
+                .then(response => {
+                    this.timestamps = response.data.data
                     this.loading = false
                 })
                 .catch(error => {

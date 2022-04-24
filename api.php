@@ -1,5 +1,6 @@
 <?php
 ini_set('display_errors', 0);
+date_default_timezone_set("Asia/Tokyo");
 
 require_once(__DIR__ . "/config.inc.php");
 
@@ -70,7 +71,7 @@ function fetchPublicRepos()
     if (file_exists($path)) {
         $previous = json_decode(file_get_contents($path), true);
 
-        if ($previous["timestamp"] + 60 * 5 <= time()) {
+        if ($previous["timestamp"] + 60 * 5 > time()) {
             return $previous["data"];
         }
     }
@@ -129,7 +130,7 @@ function fetchIssues($repo)
     if (file_exists($path)) {
         $previous = json_decode(file_get_contents($path), true);
 
-        if (isset($previous[$repo]) && $previous[$repo]["timestamp"] + 60 * 5 <= time()) {
+        if (isset($previous[$repo]) && $previous[$repo]["timestamp"] + 60 * 5 > time()) {
             return $previous[$repo]["data"];
         }
     }
@@ -291,6 +292,33 @@ function getIssues()
     return $results;
 }
 
+function getTimestamps()
+{
+    global $config;
+    $repo = $_GET["repo"];
+
+    $timestamps = [];
+    if (file_exists($config["file"]["repos"])) {
+        $repos = json_decode(file_get_contents($config["file"]["repos"]), true);
+        $timestamps[] = [
+            "name" => "repos",
+            "timestamp" => date("Y-m-d H:i:s", $repos["timestamp"])
+        ];
+    }
+
+    if (file_exists($config["file"]["issues"])) {
+        $issues = json_decode(file_get_contents($config["file"]["issues"]), true);
+
+        if (isset($issues[$repo])) {
+            $timestamps[] = [
+                "name" => "issues",
+                "timestamp" => date("Y-m-d H:i:s", $issues[$repo]["timestamp"])
+            ];
+        }
+    }
+    return $timestamps;
+}
+
 function upVote()
 {
     $repo = $_GET["repo"];
@@ -357,6 +385,9 @@ function main()
         }
         if ($_GET["action"] === "get-issues") {
             return getIssues();
+        }
+        if ($_GET["action"] === "get-timestamps") {
+            return getTimestamps();
         }
     }
     // POST ?action=up : +1 投票
