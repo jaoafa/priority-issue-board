@@ -100,7 +100,7 @@ function fetchPublicRepos()
     }
     $data = json_decode($response, true);
     $data = array_filter($data, function ($repo) {
-        return !$repo["private"];
+        return !$repo["private"] && !$repo["archived"];
     });
     file_put_contents($path, json_encode([
             "timestamp" => time(),
